@@ -2,7 +2,9 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { Button, TextInput, Headline } from 'react-native-paper'
 
+
 const LoginScreen = ({ navigation }) => {
+
     return (
         <View 
             style={{ 
@@ -21,6 +23,7 @@ const LoginScreen = ({ navigation }) => {
             <TextInput 
                 mode="outlined"
                 label="Password"
+                secureTextEntry={true}
             />
             <Button
                 style={{
@@ -28,6 +31,9 @@ const LoginScreen = ({ navigation }) => {
                     padding: 5
                 }}
                 mode="contained"
+                onPress={() => {
+                    console.log('coba')
+                }}
             >
                 LOGIN
             </Button>
