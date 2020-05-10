@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text } from 'react-native'
-import { Button, TextInput, Headline, Snackbar } from 'react-native-paper'
+import { Button, TextInput, Headline, Snackbar, HelperText } from 'react-native-paper'
 import axios from 'axios';
-import base64 from 'react-native-base64';
 
 const LoginScreen = ({ navigation }) => {
 
@@ -10,13 +9,17 @@ const LoginScreen = ({ navigation }) => {
     const [password, setPassword] = useState('');
     const [visible, setVisible] = useState(false);
     
-    const check = () => {
-        axios.post('http://localhost:8000/api/auth/login', {
-            email: 'admin@email.com',
-            password: 'passwor'
+    const login = () => {
+        axios.post('http://192.168.100.57:8000/api/auth/login', {
+            email: email,
+            password: password,
         }).then((response) => {
-            console.log(response)
-        });
+            navigation.navigate('Home');
+        }).catch((error) => {
+            console.log(email);
+            console.log(password);
+            setVisible(true);
+        })
     }
 
     return (
@@ -34,45 +37,49 @@ const LoginScreen = ({ navigation }) => {
                 <TextInput 
                     style={{ backgroundColor: 'transparent' }}
                     label="Email"
-                    onChangeText={text => setEmail(text)}
-                    />
+                    error={true}
+                    errorText='Error nih emailnya'
+                    onChangeText={text => setEmail(text)}                    
+                    autoCapitalize="none"
+                    autoCompleteType="email"
+                    textContentType="emailAddress"
+                    keyboardType="email-address"
+                />
+                <HelperText
+                type="error"
+                visible={true}
+                >
+                Email address is invalid!
+                </HelperText>
                 <TextInput 
                     style={{ backgroundColor: 'transparent' }}
                     label="Password"
                     onChangeText={text => setPassword(text)}
-                    secureTextEntry={true}
-                    />
+                    secureTextEntry
+                    error={true}
+                    errorText='Error nih emailnya'
+                />                
                 <Button
                     style={{
                         marginTop: 20,
                         padding: 5
                     }}
                     mode="contained"
-                    onPress={() => {
-                        axios.post('http://192.168.100.57:8000/api/auth/login', {
-                            email: email.text,
-                            password: password.text,
-                        }).then((response) => {
-                            console.log(response.data);
-                            navigation.navigate('Home');
-                        }).catch((error) => {
-                            setVisible(true);
-                        })
-                    }}
-                    >
+                    onPress={() => login()}
+                >
                     LOGIN
                 </Button>        
             </View>
             <View style={{ flex: 1, justifyContent: 'space-between' }} >
                 <Snackbar
-                visible={visible}
-                onDismiss={() => setVisible(false)}
-                action={{
-                    label: 'Undo',
-                    onPress: () => {
-                        // Do something
-                    },
-                }}
+                    visible={visible}
+                    onDismiss={() => setVisible(false)}
+                    action={{
+                        label: 'Dismiss',
+                        onPress: () => {
+                            // Do something
+                        },
+                    }}
                 >
                 Password dan Username Salah, Coba lagi 
                 </Snackbar>            
@@ -81,4 +88,4 @@ const LoginScreen = ({ navigation }) => {
     )
 }
 
-export default LoginScreen
+export default LoginScreen 
